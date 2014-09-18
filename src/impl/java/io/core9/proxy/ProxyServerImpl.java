@@ -45,6 +45,7 @@ public class ProxyServerImpl implements ProxyServer {
 						
 						@Override
 						public HttpResponse requestPre(HttpObject httpObject) {
+							rules.
 							System.out.println("REQ-PRE : " + httpObject.getClass().getName());
 							if(httpObject instanceof HttpRequest) {
 								HttpRequest request = (HttpRequest) httpObject;
