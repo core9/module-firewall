@@ -29,6 +29,6 @@ dependencies {
 	implCompile 'org.slf4j:slf4j-api:1.7.7'	
 	implCompile 'com.barchart.udt:barchart-udt-bundle:2.3.0'
 	implCompile 'commons-io:commons-io:2.4'
+	implCompile 'commons-codec:commons-codec:1.9'
 	
-	testCompile 'org.apache.httpcomponents:httpclient:4.2.3'
 }
