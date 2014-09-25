@@ -20,11 +20,13 @@ task publishBintray (type: org._10ne.gradle.rest.RestTask, dependsOn: bintrayUpl
 }
 
 dependencies {
+	apiCompile 'io.core9:module-database-api:+'
 	apiCompile 'io.core9:core-api:+'
-	apiCompile 'org.slf4j:slf4j-api:1.7.7'
+	apiCompile 'io.core9:module-rules-api:+'
 	
-	implCompile 'io.core9:module-rules-api:+'
-	implCompile 'io.netty:netty-all:4.0.23.Final'
+	apiCompile 'io.netty:netty-all:4.0.23.Final'
+	
+	implCompile 'org.slf4j:slf4j-api:1.7.7'	
 	implCompile 'com.barchart.udt:barchart-udt-bundle:2.3.0'
 	implCompile 'commons-io:commons-io:2.4'
 	
