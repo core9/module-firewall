@@ -11,6 +11,7 @@ import io.netty.handler.codec.http.HttpResponse;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.HttpVersion;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +38,11 @@ public class ProxyServerImpl implements ProxyServer {
 		resolver.addHost(proxy);
 		hostnameProxies.put(proxy.getHostname(), proxy);
 		return this;
+	}
+	
+	@Override
+	public Collection<Proxy> getProxies() {
+		return hostnameProxies.values();
 	}
 	
 	@Override
@@ -147,7 +153,7 @@ public class ProxyServerImpl implements ProxyServer {
 		switch (status.getType()) {
 		case ALLOW:
 		case PROCESS:
-			request.setHttpObject(null);
+			//request.setHttpObject(null);
 			return;
 		case DENY:
 			request.setHttpObject(new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.FORBIDDEN));

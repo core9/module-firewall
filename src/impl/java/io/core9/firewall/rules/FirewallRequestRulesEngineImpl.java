@@ -15,6 +15,7 @@ import io.core9.rules.Status;
 import io.core9.rules.Status.Type;
 
 import java.util.List;
+import java.util.Map;
 
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 import net.xeoh.plugins.base.annotations.events.PluginLoaded;
@@ -63,6 +64,11 @@ public class FirewallRequestRulesEngineImpl extends AbstractRulesEngine<ProxyReq
 	@Override
 	public Status handle(List<String> ruleSets, ProxyRequest request) throws RuleException {
 		return this.handle(vhost, ruleSets, request, new Status(Type.INITIALIZED));
+	}
+	
+	@Override
+	public Map<String, RuleSet> getRuleSets() {
+		return this.getRulesRegistry().getRuleSets(vhost);
 	}
 	
 	public FirewallRequestRulesEngineImpl() {
