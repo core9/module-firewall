@@ -14,7 +14,13 @@ public class Core9HostResolver implements HostResolver {
 	@Override
 	public InetSocketAddress resolve(String host, int port) throws UnknownHostException {
 		if(HOSTS.containsKey(host)) {
-			return new InetSocketAddress(HOSTS.get(host).getOrigin(), port);
+			String origin = HOSTS.get(host).getOrigin();
+			if(origin.contains(":")) {
+				String [] temp = origin.split(":");
+				origin = temp[0];
+				port = Integer.parseInt(temp[1]);
+			}
+			return new InetSocketAddress(origin, port);
 		} else {
 			return null;
 		}
