@@ -38,6 +38,12 @@ public class ProxyServerImpl implements ProxyServer {
 		hostnameProxies.put(proxy.getHostname(), proxy);
 		return this;
 	}
+	
+	@Override
+	public ProxyServer removeAllProxies() {
+		resolver.removeAllHosts();
+		return this;
+	}
 
 	@Override
 	public ProxyServer start() {

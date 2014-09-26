@@ -40,7 +40,8 @@ public class FirewallRequestRulesEngineImpl extends AbstractRulesEngine<ProxyReq
 
 	@Override
 	public void removeVirtualHost(VirtualHost vhost) {
-		this.removeVirtualHost(vhost);
+		this.getRulesRegistry().remove(vhost);
+		this.vhost = null;
 	}
 
 	@Override

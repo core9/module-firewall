@@ -33,5 +33,10 @@ public class Core9HostResolver implements HostResolver {
 	public Proxy getProxySpecification(String hostname) {
 		return HOSTS.get(hostname);
 	}
+	
+	public Core9HostResolver removeAllHosts() {
+		HOSTS.clear();
+		return this;
+	}
 
 }
