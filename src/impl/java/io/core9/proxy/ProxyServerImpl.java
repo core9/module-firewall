@@ -60,8 +60,8 @@ public class ProxyServerImpl implements ProxyServer {
 			port = "8080";
 		}
 		DefaultHttpProxyServer.bootstrap()
-			.withAddress(new InetSocketAddress("0.0.0.0", Integer.parseInt(port)))
 			.withPort(Integer.parseInt(port))
+			.withListenOnAllAddresses(true)
 			.withServerResolver(resolver)
 			.withFiltersSource(new HttpFiltersSourceAdapter() {
 				
