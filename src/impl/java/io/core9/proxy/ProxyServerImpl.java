@@ -11,6 +11,7 @@ import io.netty.handler.codec.http.HttpResponse;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.HttpVersion;
 
+import java.net.InetSocketAddress;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -53,8 +54,14 @@ public class ProxyServerImpl implements ProxyServer {
 
 	@Override
 	public ProxyServer start() {
+		String port = System.getenv("PORT");
+		port = System.getProperty("PORT", port);
+		if(port == null) {
+			port = "8080";
+		}
 		DefaultHttpProxyServer.bootstrap()
-			.withPort(Integer.parseInt(System.getProperty("PORT", "80")))
+			.withAddress(new InetSocketAddress("0.0.0.0", Integer.parseInt(port)))
+			.withPort(Integer.parseInt(port))
 			.withServerResolver(resolver)
 			.withFiltersSource(new HttpFiltersSourceAdapter() {
 				
