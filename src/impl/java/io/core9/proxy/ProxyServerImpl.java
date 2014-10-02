@@ -61,6 +61,7 @@ public class ProxyServerImpl implements ProxyServer {
 		}
 		DefaultHttpProxyServer.bootstrap()
 			.withPort(Integer.parseInt(port))
+			.withAllowLocalOnly(false)
 			.withListenOnAllAddresses(true)
 			.withServerResolver(resolver)
 			.withFiltersSource(new HttpFiltersSourceAdapter() {
