@@ -2,6 +2,7 @@ package io.core9.firewall.rules;
 
 import io.core9.firewall.rulehandlers.request.AllowHandler;
 import io.core9.firewall.rulehandlers.request.DenyHandler;
+import io.core9.firewall.rulehandlers.request.LogHandler;
 import io.core9.plugin.database.repository.CrudRepository;
 import io.core9.plugin.database.repository.NoCollectionNamePresentException;
 import io.core9.plugin.database.repository.RepositoryFactory;
@@ -74,5 +75,6 @@ public class FirewallRequestRulesEngineImpl extends AbstractRulesEngine<ProxyReq
 	public FirewallRequestRulesEngineImpl() {
 		this.addRuleHandler("ALLOW", new AllowHandler());
 		this.addRuleHandler("DENY", new DenyHandler());
+		this.addRuleHandler("LOG", new LogHandler());
 	}
 }
