@@ -85,10 +85,9 @@ public class ProxyServerImpl implements ProxyServer {
 
 						@Override
 						public HttpResponse requestPost(HttpObject httpObject) {
-							if(httpObject instanceof HttpRequest) {
-								setRequestHeaders(new ProxyRequest((HttpRequest) httpObject, context));
-							}
-							return null;
+							proxyRequest.setHttpObject(httpObject);
+							setRequestHeaders(proxyRequest);
+							return handleRequestPost(proxyRequest);
 						}
 
 						@Override
@@ -130,6 +129,23 @@ public class ProxyServerImpl implements ProxyServer {
 		}
 	}
 	
+	private HttpResponse handleRequestPost(ProxyRequest request) {
+		List<String> ruleSets = request.getProxy().getRuleSets().getPostRequest();
+		if(ruleSets == null) {
+			return null;
+		} else {
+			try {
+				handleRuleResponse(rules.handle(ruleSets, request), request);
+				return null;
+			} catch (RuleException e) {
+				e.printStackTrace();
+				return new DefaultFullHttpResponse(
+						HttpVersion.HTTP_1_1, 
+						HttpResponseStatus.INTERNAL_SERVER_ERROR);
+			}
+		}
+	}
+	
 	private void handleResponsePost(ProxyRequest request) {
 		List<String> ruleSets = request.getProxy().getRuleSets().getPostResponse();
 		if(ruleSets == null) {
@@ -160,7 +176,6 @@ public class ProxyServerImpl implements ProxyServer {
 		switch (status.getType()) {
 		case ALLOW:
 		case PROCESS:
-			//request.setHttpObject(null);
 			return;
 		case DENY:
 			request.setHttpObject(new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.FORBIDDEN));

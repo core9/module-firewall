@@ -5,6 +5,7 @@ import java.util.List;
 public class RuleSets {
 
 	private List<String> preRequest;
+	private List<String> postRequest;
 	private List<String> postResponse;
 
 	public List<String> getPreRequest() {
@@ -13,6 +14,14 @@ public class RuleSets {
 
 	public void setPreRequest(List<String> preRequest) {
 		this.preRequest = preRequest;
+	}
+
+	public List<String> getPostRequest() {
+		return postRequest;
+	}
+
+	public void setPostRequest(List<String> postRequest) {
+		this.postRequest = postRequest;
 	}
 
 	public List<String> getPostResponse() {
