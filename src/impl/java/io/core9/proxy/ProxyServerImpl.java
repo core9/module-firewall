@@ -19,6 +19,7 @@ import java.util.Map;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 import net.xeoh.plugins.base.annotations.injections.InjectPlugin;
 
+import org.apache.log4j.Logger;
 import org.littleshoot.proxy.HttpFilters;
 import org.littleshoot.proxy.HttpFiltersAdapter;
 import org.littleshoot.proxy.HttpFiltersSourceAdapter;
@@ -27,6 +28,7 @@ import org.littleshoot.proxy.impl.DefaultHttpProxyServer;
 @PluginImplementation
 public class ProxyServerImpl implements ProxyServer {
 	
+	private static final Logger LOG = Logger.getLogger(ProxyServerImpl.class);
 	private final Core9HostResolver resolver = new Core9HostResolver();
 	private final Map<String, Proxy> hostnameProxies = new HashMap<>();
 	
@@ -74,13 +76,24 @@ public class ProxyServerImpl implements ProxyServer {
 						
 						@Override
 						public HttpResponse requestPre(HttpObject httpObject) {
-							HttpResponse response = null;
-							if(httpObject instanceof HttpRequest) {
-								proxyRequest = new ProxyRequest((HttpRequest) httpObject, context);
-								proxyRequest.setProxy(hostnameProxies.get(((HttpRequest) httpObject).headers().get("Host")));
-								response = handleRequestPre(proxyRequest); 
+							try {
+								HttpResponse response = null;
+								if(httpObject instanceof HttpRequest) {
+									proxyRequest = new ProxyRequest((HttpRequest) httpObject, context);
+									proxyRequest.setProxy(hostnameProxies.get(((HttpRequest) httpObject).headers().get("Host")));
+									response = handleRequestPre(proxyRequest); 
+								}
+								return response;
+							} catch(NullPointerException e) {
+								if(proxyRequest.getRequest() != null) {
+									LOG.error("Not found: " + proxyRequest.getRequest().headers().get("Host") + proxyRequest.getRequest().getUri());
+								} else {
+									LOG.error(e);
+								}
+								return new DefaultFullHttpResponse(
+										HttpVersion.HTTP_1_1, 
+										HttpResponseStatus.NOT_FOUND);
 							}
-							return response;
 						}
 
 						@Override
@@ -108,7 +121,7 @@ public class ProxyServerImpl implements ProxyServer {
 		return this;
 	}
 	
-	private HttpResponse handleRequestPre(ProxyRequest request) {
+	private HttpResponse handleRequestPre(ProxyRequest request) throws NullPointerException {
 		List<String> ruleSets = request.getProxy().getRuleSets().getPreRequest();
 		if(ruleSets == null) {
 			return null;
