@@ -1,6 +1,7 @@
 package io.core9.proxy;
 
 import io.core9.firewall.rules.FirewallRequestRulesEngine;
+import io.core9.firewall.rules.ProxyHasChangedException;
 import io.core9.rules.RuleException;
 import io.core9.rules.Status;
 import io.netty.channel.ChannelHandlerContext;
@@ -45,6 +46,11 @@ public class ProxyServerImpl implements ProxyServer {
 	@Override
 	public Collection<Proxy> getProxies() {
 		return hostnameProxies.values();
+	}
+	
+	@Override
+	public Proxy getProxy(String hostname) {
+		return hostnameProxies.get(hostname);
 	}
 	
 	@Override
@@ -127,7 +133,9 @@ public class ProxyServerImpl implements ProxyServer {
 			return null;
 		} else {
 			try {
-				handleRuleResponse(rules.handle(ruleSets, request), request);
+				handleRuleResponse(request.getProxy(), rules.handle(ruleSets, request), request);
+			} catch (ProxyHasChangedException e) {
+				return handleRequestPre(request);
 			} catch (RuleException e) {
 				return new DefaultFullHttpResponse(
 						HttpVersion.HTTP_1_1, 
@@ -148,7 +156,7 @@ public class ProxyServerImpl implements ProxyServer {
 			return null;
 		} else {
 			try {
-				handleRuleResponse(rules.handle(ruleSets, request), request);
+				handleRuleResponse(request.getProxy(), rules.handle(ruleSets, request), request);
 				return null;
 			} catch (RuleException e) {
 				e.printStackTrace();
@@ -165,7 +173,7 @@ public class ProxyServerImpl implements ProxyServer {
 			return;
 		} else {
 			try {
-				handleRuleResponse(rules.handle(ruleSets, request), request);
+				handleRuleResponse(request.getProxy(), rules.handle(ruleSets, request), request);
 			} catch (RuleException e) {
 				e.printStackTrace();
 				request.setHttpObject(new DefaultFullHttpResponse(
@@ -178,14 +186,17 @@ public class ProxyServerImpl implements ProxyServer {
 	private void setRequestHeaders(ProxyRequest request) {
 		request.getRequest().headers().remove("Accept-Encoding");
 		request.getRequest().headers().add("Accept-Encoding", "chunked");
-		String virtualhost = hostnameProxies.get(request.getRequest().headers().get("Host")).getVirtualHostname();
+		String virtualhost = request.getProxy().getVirtualHostname();
 		if(virtualhost != null) {
 			request.getRequest().headers().remove("Host");
 			request.getRequest().headers().add("Host", virtualhost);
 		}
 	}
 	
-	private void handleRuleResponse(Status status, ProxyRequest request) throws RuleException {
+	private void handleRuleResponse(Proxy proxy, Status status, ProxyRequest request) throws RuleException {
+		if(request.getProxy() != proxy) {
+			throw new ProxyHasChangedException();
+		}
 		switch (status.getType()) {
 		case ALLOW:
 		case PROCESS:

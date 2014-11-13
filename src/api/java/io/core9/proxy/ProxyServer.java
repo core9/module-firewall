@@ -13,5 +13,7 @@ public interface ProxyServer extends Core9Plugin {
 	ProxyServer removeAllProxies();
 
 	Collection<Proxy> getProxies();
+
+	Proxy getProxy(String hostname);
 	
 }
