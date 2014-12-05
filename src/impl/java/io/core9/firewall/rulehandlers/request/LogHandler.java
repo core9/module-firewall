@@ -13,7 +13,7 @@ public class LogHandler implements RuleHandler<ProxyRequest, Status> {
 
 	@Override
 	public Status handle(Rule rule, ProxyRequest context, Status status) {
-		LOG.info("Received request: " + context.getRequest().getUri() + " from " + context.getCtx().channel().remoteAddress());
+		LOG.info("Received request: " + context.getProxy().getHostname() + context.getRequest().getUri() + " from " + context.getCtx().channel().remoteAddress());
 		return status;
 	}
 	

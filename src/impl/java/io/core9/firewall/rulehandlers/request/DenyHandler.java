@@ -19,7 +19,7 @@ public class DenyHandler extends ClientHandler {
 			return status.setType(Type.PROCESS);
 		} else {
 			if(PathHandler.matches(rule, request.getRequest().getUri())) {
-				LOG.warn("Denied request: " + request.getRequest().getUri() + " from " + request.getCtx().channel().remoteAddress());
+				LOG.warn("Denied request: " + request.getProxy().getHostname() + request.getRequest().getUri() + " from " + request.getCtx().channel().remoteAddress());
 				return status.setType(Type.DENY);
 			}
 		}

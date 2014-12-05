@@ -18,7 +18,7 @@ public class AllowHandler extends ClientHandler {
 		Status clientStatus = super.handle(rule, proxyRequest, status);
 		if(clientStatus.getType() == Type.PROCESS) {
 			if(PathHandler.matches(rule, request.getUri())) {
-				LOG.info("Allowed request: " + request.getUri() + " from " + proxyRequest.getCtx().channel().remoteAddress());
+				LOG.info("Allowed request: " + proxyRequest.getProxy().getHostname() + request.getUri() + " from " + proxyRequest.getCtx().channel().remoteAddress());
 				return clientStatus.setType(Type.ALLOW);
 			}
 		}
