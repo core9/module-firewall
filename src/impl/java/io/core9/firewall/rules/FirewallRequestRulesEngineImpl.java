@@ -31,10 +31,15 @@ public class FirewallRequestRulesEngineImpl extends AbstractRulesEngine<ProxyReq
 	public void onRepositoryFactory(RepositoryFactory factory) throws NoCollectionNamePresentException {
 		ruleSetRepository = factory.getRepository(RuleSet.class);
 	}
+	
+	@Override
+	public void setVirtualHost(VirtualHost vhost) {
+		this.vhost = vhost;
+	}
 
 	@Override
 	public void addVirtualHost(VirtualHost vhost) {
-		this.vhost = vhost;
+		setVirtualHost(vhost);
 		ruleSetRepository.getAll(vhost).forEach(ruleSet -> {
 			this.addRuleSet(vhost, ruleSet);
 		});
