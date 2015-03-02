@@ -1,6 +1,7 @@
 package org.littleshoot.proxy.impl;
 
 import static org.littleshoot.proxy.impl.ConnectionState.*;
+import io.core9.proxy.ContextualObjectAggregator;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
@@ -413,8 +414,8 @@ abstract class ProxyConnection<I extends HttpObject> extends
     protected void aggregateContentForFiltering(ChannelPipeline pipeline,
             int numberOfBytesToBuffer) {
         pipeline.addLast("inflater", new HttpContentDecompressor());
-        pipeline.addLast("aggregator", new HttpObjectAggregator(
-                numberOfBytesToBuffer));
+//        pipeline.addLast("aggregator", new HttpObjectAggregator(numberOfBytesToBuffer));
+        pipeline.addLast("aggregator", new ContextualObjectAggregator(numberOfBytesToBuffer, proxyServer.getServerResolver()));
     }
 
     /**
