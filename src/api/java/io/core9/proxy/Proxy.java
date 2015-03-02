@@ -11,6 +11,7 @@ public class Proxy extends AbstractCrudEntity implements CrudEntity {
 	private String virtualHostname;
 	private String origin;
 	private RuleSets ruleSets;
+	private boolean needsFullHttpObject;
 
 	public String getHostname() {
 		return hostname;
@@ -43,4 +44,13 @@ public class Proxy extends AbstractCrudEntity implements CrudEntity {
 	public void setRuleSets(RuleSets ruleSets) {
 		this.ruleSets = ruleSets;
 	}
+
+	public boolean needsFullHttpObject() {
+		return needsFullHttpObject;
+	}
+	
+	public void needsFullHttpObject(boolean needsFullHttpObject) {
+		this.needsFullHttpObject = needsFullHttpObject;
+	}
+	
 }

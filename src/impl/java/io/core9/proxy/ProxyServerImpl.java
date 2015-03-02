@@ -74,6 +74,11 @@ public class ProxyServerImpl implements ProxyServer {
 			.withFiltersSource(new HttpFiltersSourceAdapter() {
 				
 				@Override
+			    public int getMaximumRequestBufferSizeInBytes() {
+			        return 5000000; // Use 5 MB max
+			    }
+				
+				@Override
 				public HttpFilters filterRequest(HttpRequest originalRequest, ChannelHandlerContext context) {
 					
 					return new HttpFiltersAdapter(originalRequest) {
