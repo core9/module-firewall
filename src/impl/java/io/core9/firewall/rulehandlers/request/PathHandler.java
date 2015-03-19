@@ -3,6 +3,8 @@ package io.core9.firewall.rulehandlers.request;
 import io.core9.rules.Rule;
 
 public class PathHandler {
+	
+	public static final String REGEX_PREFIX = "regex:";
 
 	public static boolean matches(Rule rule, String path) {
 		if (rule.getStartsWith() != null) {
@@ -14,7 +16,10 @@ public class PathHandler {
 		}
 		if (rule.getExact() != null) {
 			for (String exactPath : rule.getExact()) {
-				if (path.equals(exactPath)) {
+				if (exactPath.startsWith(REGEX_PREFIX)) {
+					return path.matches(exactPath.substring(REGEX_PREFIX.length()));
+				}
+				else if (path.equals(exactPath)) {
 					return true;
 				}
 			}
